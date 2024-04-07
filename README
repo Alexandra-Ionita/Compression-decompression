@@ -1,0 +1,85 @@
+Nume: Ionita Alexandra-Mihaela
+Email personal: ionitaalexandra614@gmail.com
+
+
+		Structuri de date si Algoritmi
+				Tema #2
+
+
+In main am apelat functiile corespunzatoare cerintelor. Daca cerinta ce trebuie
+rezolvata este cerinta1 sau cerinta 2, apelez aceeasi functie req_1_2 deoarece 
+ambele necesita crearea arborelui de compresie. Daca cerinta ce trebuie rezolvata
+este cerinta 3, apelez req_3. 
+
+Arborele de compresie a fost realizat in felul urmator: fiind dat un fisier de
+tip ppm ce contine imaginea, am deschis fisierul pentru a fi citit in format text
+si am adaugat datele in anumite variabile. Apoi am inchis fisierul si l-am redeschis
+in format binar pentru a "citi" imaginea. M-am folosit de o structura numita Image 
+ce retine factorul si matricea de pixeli. Matricea de pixeli are elemnte de tip
+struct pixel** ce contine variabile de tip unsigned char corespunzatoare fiecarei
+culori ce intra in componenta unui pixel: rosu, verde, albastru. In aceasta matrice
+am retinut fiecare culoare din fiecare pixel ce alcatuieste imaginea. Mai apoi,
+am folosit o structura TArb ce retine datele despre arbore. Fiecare nod din arbore
+corespunde unui bloc din imagine, asa ca structura contine o variabila de tip
+struct pixel in care retin valoarea medie a fiecarei culori (RGB) din alcatuirea
+blocului, o variabila de tip unsigned char ce retine tipul nodului (0 daca este
+intern si 1 daca este frunza), o variabila de tip unsigned int ce retine dimensiunea
+blocului, o variabila coord de tip struct Coordonates (care la randul ei contine
+variabile de tip int: x si y) in care sa retin coordonatele, linia si coloana
+de la care incepe blocul, o variabile de tip long long int ce retine scorul
+similaritatii corespunzator blocului, si 4 variabilde de tip struct nod* ce
+reprezinta pointeri la copiii nodului respectiv. Am folosit apoi o functie ce imi
+construieste arborele astfel: folosesc o coada pentru a putea crea arborele 
+pe niveluri. Coada contine initial primul nod facut in functia head ce corespunde
+intregii imagini. Deci c->inc va pointa catre acest nod. Verific daca este de tip
+1 sau 0. Daca e de tip 0 aloc fiecare copil in parte si pun pe campul size
+dimensiunea nodului "parinte" impartita la 2, deoarece cei 4 copii reprezinta
+un sfert din blocul corespunzator nodului parinte. Coordonatele le-am pus in
+felul urmator:
+-copil1: linia si coloana vor fi aceleasi cu ale parintelui
+-copil2: linia va fi aceeasi ca linia parintelui, dar coloana va fi coloana
+parintelui + dimensiunea blocului de imagine corespunzator copilului
+-copil3: linia si coloana vor fi linia si coloana parintelui + 
+dimensiunea blocului de imagine corespunzator copilului
+-copil4: linia va fi linia parintelui + dimensiunea blocului de imagine 
+corespunzator copilului, iar coloana va fi aceeasi cu a printelui
+Apoi fiecare copil va trece prin functia verify_mean pentru a introduce in nod
+date referitoare la media fiecarui canal red green blue. Se calculeaza scorul
+similaritatii care se trece de asemenea in datele ce le retine nodul, acesta 
+se compara cu factorul primit ca argument si se decide daca nodul este de tip
+0 sau 1. Apoi se introduc copiii in coada, se elimina parintele. Acum c->inc
+va pointa catre primul copil care acum este considerat parinte si repeta procedura
+pana cand c->inc nu va mai pointa la nimic, semn ca arborele a fost construit
+si ca nu mai exista noduri de parcurs.
+
+Aceste arbore, creat in acest mod, este util pentru rezolvarea primelor doua
+cerinte. Odata creat, cerintele pot fi rezolvate.\
+
+Cerinta 1: Mai intai am construit arborele. Apoi am aflat numărul de niveluri din 
+arborele cuaternar, urmat de numărul de blocuri din imagine pentru care scorul similarităttii
+pixelilor este mai mic sau egal decât factorul furnizat, adica numarul de frunze,
+apoi am aflat dimensiunea laturii pătratului pentru cea mai mare zonă din imagine care a
+rămas nedivizată, adica am aflat frunza de pe cel mai mic nivel si am retinut
+intr-o variabila dimensiunea. Toate acestea au fost scrise intr-un fisier in
+format text.
+
+Cerinta 2: Am construit arborele cuaternar de compresie. Apoi cu ajutorul
+unei cozi am parcurs arborele pe niveluri si am scris intr-un fisier in format
+binar datele cerute in enunt.
+
+Cerinta 3: Pentru aceasta cerinta a trebuit sa construiesc arborele in functie de
+fisierul primit ca argument ce este exact ca cel realizat la cerinta 2. M-am
+folosit de o variabila de tip TArb, adica un vector de noduri ce alcatuieste arborele
+si de o variabila de tip Image ce va retine imaginea creata. Am creat nodul corespunzator
+intregii imagini, am introdus in acesta dimensiunea imaginii si, cu functia make_nod,
+am aflat si introdus tipul. Daca tipul este 0, inseamna ca nu mai am nimic de citit
+din fisier. In caz contrar, citesc ci adaug valori pentru culorile ce alcatuiesc un pixel.
+I-am pus coordonatele 0,0. Apoi am folosit un algoritm asemanator cu cel de la crearea
+arborelui pentru primele 2 cerinte, adaugand in plus functia make_nod pentru fiecare
+copil. Apoi am folosit functia compressed_image pentru a crea imaginea. In aceasta
+am creat arborele pe niveluri cu ajutorul unei cozi. Pentru crearea imaginii
+a fost nevoie doar de datele despre culori si pixeli din nodurile de tip frunza,
+asa ca la gasirea unui astfel de nod am adaugat in matricea de imagine, pentru fiecare
+pixel, valorile culorilor corespunzatoare luate din valorile aflate in nod. In final
+pentru crearea fisierului ppm am adaugat datele corespunzatoare de inceput in format
+text si imaginea propriu-zisa in format binar.
